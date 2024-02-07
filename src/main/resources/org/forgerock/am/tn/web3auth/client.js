@@ -118,23 +118,7 @@ let web3auth = null;
 
     if (web3auth.status === 'connected') {
       console.log('Fully connected to Web3Auth!');
-
-      /*const ethPrivateKey = await web3authSfaprovider.request({ method: "eth_private_key" });
-      console.log("ETH Private Key", ethPrivateKey);
-
-      const user = await web3auth.getUserInfo();
-      console.log("User", user);
-
-      const web3 = new Web3(web3auth.provider);
-      const address = await web3.eth.getAccounts();
-      console.log("Address", address);
-
-      const balance = web3.utils.fromWei(
-        await web3.eth.getBalance(address[0]), // Balance is in wei
-        "ether"
-      );
-      console.log("Balance", balance);*/
-      console.log("Here is the sessionID", web3auth.sessionId);
+      console.log("Here is the sessionID", web3auth.sessionId);//TODO needs to go back to server via hiddencallback
 
     } else {
       console.log('Still not connected JC!');

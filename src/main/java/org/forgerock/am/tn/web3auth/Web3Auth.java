@@ -151,7 +151,6 @@ public class Web3Auth extends AbstractDecisionNode {
             
             String signedJWT = getSignedJWT(context);
             
-            //ScriptTextOutputCallback scb = new ScriptTextOutputCallback(getStartScript(context.getStateFor(this).get(config.usernameField()).asString(), signedJWT));
             ScriptTextOutputCallback scb = getScriptedCallback(context.getStateFor(this).get(config.usernameField()).asString(), signedJWT);
             
             HiddenValueCallback hc = new HiddenValueCallback("web3authResponse");
@@ -218,14 +217,14 @@ public class Web3Auth extends AbstractDecisionNode {
 		
 		SignedJwtBuilderImpl jwtBuilder = new SignedJwtBuilderImpl(srsh)
 				.headers().alg(JwsAlgorithm.RS256).done()
-				.claims(getClaimSetToIG(context));
+				.claims(getClaimSet(context));
 
 		String ets = jwtBuilder.build();
 		return ets;
 	}
 	
 	
-	private JwtClaimsSet getClaimSetToIG(TreeContext context)throws Exception{
+	private JwtClaimsSet getClaimSet(TreeContext context)throws Exception{
 		JwtClaimsSet jwtClaims = new JwtClaimsSet();	
 		NodeState ns = context.getStateFor(this);
 		
