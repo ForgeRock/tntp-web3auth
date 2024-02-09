@@ -123,13 +123,9 @@ Review the log messages to find the reason for the error and address the issue a
 
 Click here for <a href="https://web3auth.io/docs/what-is-web3auth">Documentation</a>
 
-## Examples
+## Example Journey
 
 
-**SPECIFIC BUILD INSTRUCTIONS HERE**
-
-**SCREENSHOTS ARE GOOD LIKE BELOW**
-
-![ScreenShot](./example.png)
+![ScreenShot](./web3auth.png)
 
  
