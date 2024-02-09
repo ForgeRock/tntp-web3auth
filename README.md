@@ -21,12 +21,21 @@ Web3 wallets and applications. It streamlines the onboarding of both mainstream 
 Copy the .jar file from the ../target directory into the ../web-container/webapps/openam/WEB-INF/lib directory where AM is deployed.  Restart the web container to pick up the new node.  The node will then appear in the authentication trees components palette.
 
 
-**USAGE HERE**
+## Dependencies
+
+To use this node, you must
+
+<ul>
+    <li>Have a Web3Auth account</li>
+    <li>Have an account within AM</li>    
+</ul>
 
 ## Inputs
 
-`None`
-
+There must be`Username`
+`Password`
+nodes within the journey to authenticate the user <br>
+within AM to initiate Web3Auth authentication
 
 ## Configuration
 <table>
