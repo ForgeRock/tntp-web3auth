@@ -1,41 +1,33 @@
 <!--
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
- * License.
+ * This code is to be used exclusively in connection with Ping Identity Corporation software or services.
+ * Ping Identity Corporation only offers such software or services to legal entities who have entered into
+ * a binding license agreement with Ping Identity Corporation.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Copyright 2023 ForgeRock AS.
+ * Copyright 2024 Ping Identity Corporation. All Rights Reserved
 -->
 # Web3Auth
 
-A simple authentication node for ForgeRock's [Identity Platform][forgerock_platform] 7.3.0 and above. This node uses <strong>Web3Auth </strong>which is a pluggable wallet infrastructure for 
-Web3 wallets and applications. It streamlines the onboarding of both mainstream and crypto native users in under a minute by providing experiences that they're most comfortable with. With support for all OAuth based logins systems, web & mobile native platforms, Web3Auth provides a seamless onboarding experience for your users.
+A simple authentication node for Access Management 7.4.0 and above. This node uses <strong>Web3Auth </strong>which is a pluggable wallet infrastructure for
+Web3 wallets and applications.
+
+The goal of this node is to log a user into Web3Auth, and retrieve the users wallet to add to the session.
+
+This node uses the [Web3Auth Core Kit Single Factor Auth Web SDK](https://web3auth.io/docs/sdk/core-kit/sfa-web).
 
 Copy the .jar file from the ../target directory into the ../web-container/webapps/openam/WEB-INF/lib directory where AM is deployed.  Restart the web container to pick up the new node.  The node will then appear in the authentication trees components palette.
 
 
 ## Dependencies
 
-To use this node, you must
+To use this node, you must:
 
 <ul>
-    <li>Have a Web3Auth account</li>
-    <li>Have an account within AM</li>    
+    <li>Setup a Web Application in Web3Auth with a Custom Authentication </li>
 </ul>
 
 ## Inputs
 
-There must be`Username`
-`Password`
-nodes within the journey to authenticate the user <br>
-within AM to initiate Web3Auth authentication
+The node expects a username to be passed in that will be used for wallet retrieval.
 
 ## Configuration
 <table>
@@ -73,7 +65,7 @@ within AM to initiate Web3Auth authentication
 		<td>* Chain Namespace</td>
         <td>The Compatible Chain to use</td>
         <td>eip155</td>
-	</tr> 
+	</tr>
     <tr>
 		<td>* Chain ID</td>
 		<td>The chain id of the chain</td>
@@ -83,12 +75,12 @@ within AM to initiate Web3Auth authentication
 		<td>* RPC Target</td>
 		<td>RPC target Url for the chain</td>
         <td>https://rpc.ankr.com/eth</td>
-	</tr> 
+	</tr>
     <tr>
 		<td>* Display Name</td>
 		<td>* Display Name for the chain</td>
         <td>Ethereum Mainnet</td>
-	</tr> 
+	</tr>
     <tr>
 		<td>* Block Explorer</td>
 		<td>Url of the block explorer</td>
@@ -104,12 +96,37 @@ within AM to initiate Web3Auth authentication
 		<td>Name for currency ticker (e.g: Ethereum)</td>
         <td>Ethereum</td>
 	</tr>
-    <tr>
+  <tr>
 		<td>* Verifier Identifier</td>
 		<td>The unique identifier for your custom authentication registration on the auth network</td>
         <td>N/A</td>
 	</tr>
-   
+  <tr>
+		<td>* Issuer</td>
+		<td>Issuer used in "Select JWT validation" in Web3Auth Custom Authentication configuration</td>
+        <td>N/A</td>
+	</tr>
+  <tr>
+		<td>* Audience</td>
+		<td>Audience used in "Select JWT validation" in Web3Auth Custom Authentication configuration</td>
+        <td>N/A</td>
+	</tr>
+  <tr>
+		<td>* Message while waiting</td>
+		<td>Message while waiting</td>
+        <td>Please wait while we retrieve your Web3Auth Session ID</td>
+	</tr>
+  <tr>
+		<td>* Session ID to Session</td>
+		<td>Save the Web3Auth Session ID to the Access Management Session of the user</td>
+        <td>True</td>
+	</tr>
+  <tr>
+		<td>* Session ID to Shared State</td>
+		<td>Save the Web3Auth Session ID to the Journey Shared State</td>
+        <td>True</td>
+	</tr>
+
 
 </table>
 * = Required
@@ -117,7 +134,7 @@ within AM to initiate Web3Auth authentication
 
 ## Outputs
 
-`None`
+The Web3Auth SessionID can be saved to the Shared State and the users Access Management Session.
 
 ## Outcomes
 
@@ -137,4 +154,4 @@ Click here for <a href="https://web3auth.io/docs/what-is-web3auth">Documentation
 
 ![ScreenShot](./web3auth.png)
 
- 
+
