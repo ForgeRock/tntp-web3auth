@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Web3AuthPlugin extends AbstractNodeAmPlugin {
 
-	static private String currentVersion = "0.0.22";
+	static private String currentVersion = "0.0.33";
 	static final String logAppender = "[Version: " + currentVersion + "][Marketplace]";
 	private final Logger logger = LoggerFactory.getLogger(Web3AuthPlugin.class);
 	private String loggerPrefix = "[Web3AuthPlugin]" + Web3AuthPlugin.logAppender;

@@ -13,7 +13,7 @@
     <artifactId>web3auth</artifactId>
 
     <groupId>org.forgerock.am.tn</groupId>
-    <version>0.0.22</version>    
+    <version>0.0.33</version>    
     <name>Web3Auth Node</name>
     <description>To make digital ownership and identity human-centric and accessible to everyone</description>
 

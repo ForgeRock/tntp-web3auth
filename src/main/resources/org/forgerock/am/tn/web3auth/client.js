@@ -1,11 +1,12 @@
 /*
- * This code is to be used exclusively in connection with ForgeRock’s software or services. 
- * ForgeRock only offers ForgeRock software or services to legal entities who have entered 
- * into a binding license agreement with ForgeRock.  
+ * This code is to be used exclusively in connection with ForgeRock’s software or services.
+ * ForgeRock only offers ForgeRock software or services to legal entities who have entered
+ * into a binding license agreement with ForgeRock.
  */
 
 let web3auth = null;
-
+//hide the login button
+document.getElementById('loginButton_0').style.display = "none";
 (async function init() {
 
   const loadScript = (FILE_URL, async = true, type = 'text/javascript') => {
@@ -37,7 +38,7 @@ let web3auth = null;
 
   await loadScript('https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js')
     .then(data => {
-      console.log('Script loaded successfully', data);
+      //console.log('Script loaded successfully', data);
     })
     .catch(err => {
       console.error(err);
@@ -45,7 +46,7 @@ let web3auth = null;
 
   await loadScript('https://cdn.jsdelivr.net/npm/buffer@6')
     .then(data => {
-      console.log('Script loaded successfully', data);
+      //console.log('Script loaded successfully', data);
     })
     .catch(err => {
       console.error(err);
@@ -53,7 +54,7 @@ let web3auth = null;
 
   await loadScript('https://cdn.jsdelivr.net/npm/@web3auth/single-factor-auth')
     .then(data => {
-      console.log('Script loaded successfully', data);
+      //console.log('Script loaded successfully', data);
     })
     .catch(err => {
       console.error(err);
@@ -61,7 +62,7 @@ let web3auth = null;
 
   await loadScript('https://cdn.jsdelivr.net/npm/@web3auth/ethereum-provider')
     .then(data => {
-      console.log('Script loaded successfully', data);
+      //console.log('Script loaded successfully', data);
     })
     .catch(err => {
       console.error(err);
@@ -69,12 +70,13 @@ let web3auth = null;
 
   await loadScript('https://cdn.jsdelivr.net/npm/web3@4.1.1/dist/web3.min.js')
     .then(data => {
-      console.log('Script loaded successfully', data);
+      //console.log('Script loaded successfully', data);
     })
     .catch(err => {
       console.error(err);
     });
 
+  
   const clientId = "${subclientID}";
 
   const chainConfig = {
@@ -99,11 +101,13 @@ let web3auth = null;
   await web3auth.init(ethereumPrivateKeyProvider);
   // IMP END - SDK Initialization
 
+  /*
   if (web3auth.status === 'connected') {
     console.log('Connected!');
   } else {
     console.log('Not connected yet!');
   }
+  */
 
   const verifier = "${subverifier}";
   try {
@@ -117,13 +121,15 @@ let web3auth = null;
     // IMP END - Login
 
     if (web3auth.status === 'connected') {
-      console.log('Fully connected to Web3Auth!');
-      console.log("Here is the sessionID", web3auth.sessionId);//TODO needs to go back to server via hiddencallback
-
+	  document.getElementById('web3authResponse').value = web3auth.sessionId;
     } else {
-      console.log('Still not connected JC!');
+      document.getElementById('web3authResponse').value = "Could not connect";
     }
+    document.getElementById('loginButton_0').click();
+    
   } catch (error) {
-    alert(error);
+    document.getElementById('web3authResponse').value = "Could not connect";
+    document.getElementById('loginButton_0').click();
+    
   }
 })();

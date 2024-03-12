@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.ConfirmationCallback;
+import javax.security.auth.callback.TextOutputCallback;
 
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.forgerock.json.jose.builders.SignedJwtBuilderImpl;
@@ -129,6 +129,28 @@ public class Web3Auth extends AbstractDecisionNode {
         
         @Attribute(order = 1300, validators = { RequiredValueValidator.class })
     	String verifier();
+        
+        @Attribute(order = 1400, validators = { RequiredValueValidator.class })
+    	String issuer();
+        
+        @Attribute(order = 1500, validators = { RequiredValueValidator.class })
+    	String audience();
+        
+        @Attribute(order = 1600, validators = { RequiredValueValidator.class })
+        default String message() {
+        	return "Please wait while we retrieve your Web3Auth Session ID";
+        }
+        
+        @Attribute(order = 1700)
+        default boolean saveToSession() {
+        	return true;
+        }
+        
+        @Attribute(order = 1800)
+        default boolean saveToSS() {
+        	return true;
+        }
+        
     }
 
     /**
@@ -144,26 +166,45 @@ public class Web3Auth extends AbstractDecisionNode {
 
     @Override
     public Action process(TreeContext context) {
-    	
     	try {	
-
             logger.debug(loggerPrefix + "Started");
-            
-            String signedJWT = getSignedJWT(context);
-            
-            ScriptTextOutputCallback scb = getScriptedCallback(context.getStateFor(this).get(config.usernameField()).asString(), signedJWT);
-            
-            HiddenValueCallback hc = new HiddenValueCallback("web3authResponse");
-            String[] callbackoptions = {"Next","Cancel"};
-            ConfirmationCallback cc = new ConfirmationCallback(ConfirmationCallback.INFORMATION,callbackoptions, 0);
-            Callback[] callbacks = new Callback[]{scb, hc, cc};
-            return send(callbacks).build();
-    		
+            if (!context.hasCallbacks()) {
+				// First time here. 
+                String signedJWT = getSignedJWT(context);
+                
+                ScriptTextOutputCallback scb = getScriptedCallback(context.getStateFor(this).get(config.usernameField()).asString(), signedJWT);
+                HiddenValueCallback hc = new HiddenValueCallback("web3authResponse");
+                TextOutputCallback toc = new TextOutputCallback(0, config.message());
+                Callback[] callbacks = new Callback[]{toc, scb, hc};
+                return send(callbacks).build();
+            }
+            else {
+            	//we are returning from the client side
+            	for (Callback callback : context.getAllCallbacks()) {
+            		 if (callback instanceof HiddenValueCallback) {
+                         HiddenValueCallback hcallback = (HiddenValueCallback) callback;
+                         
+                         String w3asid = hcallback.getValue(); 
+                         
+                         if (w3asid!=null && !w3asid.contains("Could not connect")) {
+                        	 if (config.saveToSS())
+                        		 context.getStateFor(this).putShared("WEB3AUTH-SESSIONID", w3asid);
+                        	
+                        	 if (config.saveToSession())
+                        		 return Action.goTo(NEXT).putSessionProperty("WEB3AUTH-SESSIONID", hcallback.getValue()).build();
+                        	 else
+                        		 return Action.goTo(NEXT).build();
+                         }
+            		 }
+            	}
+            	//if here, then missing the sessionID from the client side
+            	context.getStateFor(this).putShared("NOWEB3AUTH", "no sessionID found");
+            	return Action.goTo(ERROR).build();
+            }
     	}
     	catch (Exception ex) {
             String stackTrace = org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(ex);
             logger.error(loggerPrefix + "Exception occurred: " + stackTrace);
-            System.out.println(stackTrace);
             context.getStateFor(this).putShared(loggerPrefix + "Exception", ex.getMessage());
             context.getStateFor(this).putShared(loggerPrefix + "StackTrace", stackTrace);
             return Action.goTo(ERROR).build();
@@ -195,8 +236,7 @@ public class Web3Auth extends AbstractDecisionNode {
         try {
             return Resources.toString(resource, Charsets.UTF_8);
         } catch (IOException ex) {
-            logger.error(String.format("%s %s: %s", loggerPrefix, ex.getClass().getCanonicalName(),
-                            Arrays.toString(ex.getStackTrace())));
+            logger.error(String.format("%s %s: %s", loggerPrefix, ex.getClass().getCanonicalName(), Arrays.toString(ex.getStackTrace())));
             throw new NodeProcessException(ex);
         }
     }
@@ -227,10 +267,9 @@ public class Web3Auth extends AbstractDecisionNode {
 	private JwtClaimsSet getClaimSet(TreeContext context)throws Exception{
 		JwtClaimsSet jwtClaims = new JwtClaimsSet();	
 		NodeState ns = context.getStateFor(this);
-		
-		jwtClaims.setIssuer(context.request.serverUrl); //TODO make this a config input parm
+		jwtClaims.setIssuer(config.issuer()); 
 		jwtClaims.setSubject(ns.get(config.usernameField()).asString());
-		jwtClaims.addAudience("urn:" + context.request.hostName); //TODO make this a config input parm
+		jwtClaims.addAudience(config.audience());
 		
 		Date now = new Date();
 		Date expireDate = new Date(now.getTime() + config.ttl());
