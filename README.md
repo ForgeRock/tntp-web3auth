@@ -31,7 +31,7 @@ To use this node, you must:
     <li>In AM Click on the Realm you want to create a service for</li>
     <li>Click "Services"</li>
     <li>Click "Session Property Whitelist Service"</li>
-    <li>In "Allowlisted Session Property Names" add <code>WEB3AUTH-SESSIONID</code></li>
+    <li>In "Allowlisted Session Property Names" and "Session Properties to return for session queries" add <code>WEB3AUTH-SESSIONID</code></li>
     <li>Click "Save Changes"</li>
 </ol>
 
@@ -87,7 +87,7 @@ To use this node, you must:
             </tr>
              <tr>
                 <td>JWKS Endpoint</td>
-                <td>https://raw.githubusercontent.com/ForgeRock/tntp-web3auth/main/jwks.json</td>
+                <td>Fully Qualified URL to your JWKS</td>
             </tr>
              <tr>
                 <td>Select JWT Verifier ID</td>
@@ -95,7 +95,7 @@ To use this node, you must:
             </tr>
              </tbody>
         </table>
-   </ul>     
+   </ul>
             <li>For Select JWT Validation click "Add Custom Validation" and insert values into the fields</li>
             <ul>
             <li>Field - iss</li>
@@ -237,5 +237,3 @@ Click here for <a href="https://web3auth.io/docs/what-is-web3auth">Documentation
 
 
 ![ScreenShot](./web3auth.png)
-
-
