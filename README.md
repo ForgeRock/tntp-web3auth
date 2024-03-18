@@ -62,11 +62,11 @@ To use this node, you must:
             </tr>
              <tr>
                 <td>Select Chain(s) You Are Building On</td>
-                <td>Any Other Chain</td>
+                <td>Can leave blank</td>
             </tr>
         </table>
     </ul>
-<li>Click Save Changes </li>
+<li>Click Create Project </li>
 <li>In Home > Projects > Your Project select Custom Authentication</li>
 <li>Select Create Verifier</li>
 <li>In Creating the Verifier set the fields as seen below: </li>
